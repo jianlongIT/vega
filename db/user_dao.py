@@ -27,11 +27,10 @@ class UserDao(object):
             con = my_pool.get_connection()
             con.start_transaction()
             cursor = con.cursor()
-            sql = 'select tr.role from t_user u left join t_role tr on u.role_id = tr.id'
-            'where u.username=%s'
+            sql = 'select tr.role from t_user u left join t_role tr on u.role_id = tr.id where u.username=%s'
             cursor.execute(sql, (username,))
-            con.commit()
             role = cursor.fetchone()[0]
+            con.commit()
             return role
         except Exception as e:
             if 'con' in dir():

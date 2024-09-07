@@ -11,8 +11,8 @@ class UserService(object):
         return result
 
     def search_user_role(self, username):
-        result = self.__user_dao.search_user_role(username)
-        return result
+        role = self.__user_dao.search_user_role(username)
+        return role
 
 
 if __name__ == '__main__':
