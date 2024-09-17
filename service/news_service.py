@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 # Auther : jianlong
 from db.news_dao import NewsDao
+from db.redis_news_dao import RedisNewsDao
 
 
 class NewsService:
     __news_dao = NewsDao()
+    __redis_news_dao = RedisNewsDao()
 
     def search_unreview_list(self, page):
         result = self.__news_dao.search_unreview_list(page)
@@ -24,7 +26,7 @@ class NewsService:
         return result
 
     # 查询新闻总页数
-    def search_count_page(self): 
+    def search_count_page(self):
         count = self.__news_dao.search_count_page()
         return count
 
@@ -33,3 +35,9 @@ class NewsService:
 
     def insert(self, title, editor_id, type_id, content_id, is_top):
         self.__news_dao.insert(title, editor_id, type_id, content_id, is_top)
+
+    def search_cache(self, id):
+        return self.__news_dao.search_cache(id)
+
+    def cache_news(self, id, title, username, type, content, is_top, create_time):
+        self.__redis_news_dao.insert(id, title, username, type, content, is_top, create_time)

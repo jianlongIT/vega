@@ -13,27 +13,6 @@ __news_service = NewsService()
 __role_srvice = RoleService()
 __type_service = TypeService()
 
-
-def show_list(result, current_page):
-    for index, value in enumerate(result):
-        print(Fore.LIGHTBLUE_EX,
-              '\n\t%d\t%s\t%s\t%s' % (index + 1, value[1], value[2], value[3]))
-    print(Fore.LIGHTBLUE_EX, '\n\t========================================')
-    print(Fore.LIGHTBLUE_EX, '\n\t当前在第%d页 共%d页' % (current_page, count_page))
-    print(Fore.LIGHTBLUE_EX, '\n\t========================================')
-    print(Fore.LIGHTRED_EX, '\n\tback.返回上一层')
-    print(Fore.LIGHTRED_EX, '\n\tprev.上一页')
-    print(Fore.LIGHTRED_EX, '\n\tnext.下一页')
-    print(Style.RESET_ALL)
-    opt = input('\n\t输入操作编号:')
-    if opt == 'back':
-        break_flag = True
-    if opt == 'next' and current_page < count_page:
-        current_page += 1
-    if opt == 'prev' and current_page > 1:
-        current_page -= 1
-
-
 if __name__ == '__main__':
     while True:
         os.system('clear')
@@ -109,12 +88,38 @@ if __name__ == '__main__':
                                         count_page = __news_service.search_unreview_page_count()
                                         result = __news_service.search_unreview_list(current_page)
                                         break_flag = False
-
+                                        for index, value in enumerate(result):
+                                            print(Fore.LIGHTBLUE_EX,
+                                                  '\n\t%d\t%s\t%s\t%s' % (index + 1, value[1], value[2], value[3]))
+                                        print(Fore.LIGHTBLUE_EX, '\n\t========================================')
+                                        print(Fore.LIGHTBLUE_EX, '\n\t当前在第%d页 共%d页' % (current_page, count_page))
+                                        print(Fore.LIGHTBLUE_EX, '\n\t========================================')
+                                        print(Fore.LIGHTRED_EX, '\n\tback.返回上一层')
+                                        print(Fore.LIGHTRED_EX, '\n\tprev.上一页')
+                                        print(Fore.LIGHTRED_EX, '\n\tnext.下一页')
+                                        print(Style.RESET_ALL)
+                                        opt = input('\n\t输入操作编号:')
+                                        if opt == 'back':
+                                            break_flag = True
+                                        if opt == 'next' and current_page < count_page:
+                                            current_page += 1
+                                        if opt == 'prev' and current_page > 1:
+                                            current_page -= 1
                                         if break_flag:
                                             break
                                         if 1 <= int(opt) <= 10:
                                             update_id = result[int(opt) - 1][0]
                                             __news_service.update_unreview_count(update_id)
+                                            cache_result = __news_service.search_cache(update_id)
+                                            title = cache_result[0]
+                                            username = cache_result[1]
+                                            type = cache_result[2]
+                                            content_id = cache_result[3]
+                                            content = '100'
+                                            is_top = cache_result[4]
+                                            create_time = str(cache_result[5])
+                                            __news_service.cache_news(update_id, title, username, type, content, is_top,
+                                                                      create_time)
                                 elif opt == '2':
                                     current_page = 1
                                     while True:
@@ -122,7 +127,23 @@ if __name__ == '__main__':
                                         count_page = __news_service.search_count_page()
                                         result = __news_service.search_list(current_page)
                                         break_flag = False
-                                        show_list(result, current_page)
+                                        for index, value in enumerate(result):
+                                            print(Fore.LIGHTBLUE_EX,
+                                                  '\n\t%d\t%s\t%s\t%s' % (index + 1, value[1], value[2], value[3]))
+                                        print(Fore.LIGHTBLUE_EX, '\n\t========================================')
+                                        print(Fore.LIGHTBLUE_EX, '\n\t当前在第%d页 共%d页' % (current_page, count_page))
+                                        print(Fore.LIGHTBLUE_EX, '\n\t========================================')
+                                        print(Fore.LIGHTRED_EX, '\n\tback.返回上一层')
+                                        print(Fore.LIGHTRED_EX, '\n\tprev.上一页')
+                                        print(Fore.LIGHTRED_EX, '\n\tnext.下一页')
+                                        print(Style.RESET_ALL)
+                                        opt = input('\n\t输入操作编号:')
+                                        if opt == 'back':
+                                            break_flag = True
+                                        if opt == 'next' and current_page < count_page:
+                                            current_page += 1
+                                        if opt == 'prev' and current_page > 1:
+                                            current_page -= 1
                                         if break_flag:
                                             break
                                         if 1 <= int(opt) <= 10:

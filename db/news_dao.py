@@ -121,3 +121,20 @@ class NewsDao(object):
         finally:
             if 'con' in dir():
                 con.close()
+
+    # 查找用户缓存的记录
+    def search_cache(self, id):
+        try:
+            con = my_pool.get_connection()
+            cursor = con.cursor()
+            sql = 'select n.title,u.username,tt.type,n.content_id,n.is_top,n.create_time ' \
+                  'from t_news as n left join t_type tt on n.type_id = tt.id ' \
+                  'left join t_user as u on n.editor_id=u.id where n.id=%s'
+            cursor.execute(sql, (id,))
+            result = cursor.fetchone()
+            return result
+        except Exception as e:
+            print(e)
+        finally:
+            if 'con' in dir():
+                con.close()

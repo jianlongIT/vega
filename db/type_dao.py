@@ -10,7 +10,7 @@ class TypeDao(object):
             con = my_pool.get_connection()
             con.start_transaction()
             cursor = con.cursor()
-            sql = 'select id,type from t_type'
+            sql = 'select id,type from t_type order by id'
             cursor.execute(sql)
             result = cursor.fetchall()
             con.commit()
