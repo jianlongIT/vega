@@ -105,3 +105,19 @@ class NewsDao(object):
             if 'con' in dir():
                 con.close()
 
+    def insert(self, title, editor_id, type_id, content_id, is_top):
+        try:
+            con = my_pool.get_connection()
+            con.start_transaction()
+            cursor = con.cursor()
+            insert_sql = 'insert into t_news(title, editor_id, type_id, content_id, is_top, state)' \
+                         ' values(%s,%s,%s,%s,%s,%s)'
+            cursor.execute(insert_sql, (title, editor_id, type_id, content_id, is_top, '待审批'))
+            con.commit()
+        except Exception as e:
+            if 'con' in dir():
+                con.rollback()
+            print(e)
+        finally:
+            if 'con' in dir():
+                con.close()

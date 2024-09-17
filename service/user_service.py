@@ -28,3 +28,6 @@ class UserService(object):
 
     def user_update(self, id, username, password, email, role_id):
         self.__user_dao.user_update(id, username, password, email, role_id)
+
+    def search_user_id(self, username):
+        return self.__user_dao.search_user_id(username)

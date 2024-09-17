@@ -24,9 +24,12 @@ class NewsService:
         return result
 
     # 查询新闻总页数
-    def search_count_page(self):
+    def search_count_page(self): 
         count = self.__news_dao.search_count_page()
         return count
 
     def delete_new_by_id(self, new_id):
         self.__news_dao.delete_new_by_id(new_id)
+
+    def insert(self, title, editor_id, type_id, content_id, is_top):
+        self.__news_dao.insert(title, editor_id, type_id, content_id, is_top)

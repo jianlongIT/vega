@@ -104,7 +104,7 @@ class UserDao(object):
             if 'con' in dir():
                 con.close()
 
-    def user_delete(self, id):
+    def user_delete(self, username):
         try:
             con = my_pool.get_connection()
             con.start_transaction()
@@ -112,6 +112,24 @@ class UserDao(object):
             sql = 'delete from t_user where id =%s'
             cursor.execute(sql, (id,))
             con.commit()
+        except Exception as e:
+            if 'con' in dir():
+                con.rollback()
+            print(e)
+        finally:
+            if 'con' in dir():
+                con.close()
+
+    def search_user_id(self, username):
+        try:
+            con = my_pool.get_connection()
+            con.start_transaction()
+            cursor = con.cursor()
+            sql = 'select id from t_user where username = %s'
+            cursor.execute(sql, (username,))
+            user_id = cursor.fetchone()[0]
+            con.commit()
+            return user_id
         except Exception as e:
             if 'con' in dir():
                 con.rollback()

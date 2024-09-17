@@ -5,11 +5,13 @@ from getpass import getpass
 from service.user_service import UserService
 from service.news_service import NewsService
 from service.role_service import RoleService
+from service.type_service import TypeService
 import os, sys, time
 
 __user_service = UserService()
 __news_service = NewsService()
 __role_srvice = RoleService()
+__type_service = TypeService()
 
 
 def show_list(result, current_page):
@@ -51,7 +53,40 @@ if __name__ == '__main__':
                 while True:
                     os.system('clear')
                     if role == '新闻编辑':
-                        pass
+                        print(Fore.LIGHTBLUE_EX, '\n\t1.发表新闻')
+                        print(Fore.LIGHTBLUE_EX, '\n\t2.编辑新闻')
+                        print(Fore.LIGHTRED_EX, '\n\tback.退出登录')
+                        print(Fore.LIGHTRED_EX, '\n\texit.退出系统')
+                        print(Style.RESET_ALL)
+                        choice = input('\n\t输入操作编号:')
+                        if choice == '1':
+                            os.system('clear')
+                            title = input('\n\t新闻标题')
+                            user_id = __user_service.search_user_id(username)
+                            type_result = __type_service.search_list()
+                            for index, value in enumerate(type_result):
+                                print(Fore.LIGHTBLUE_EX,
+                                      '\n\t%d\t%s' % (index + 1, value[1]))
+                            print(Style.RESET_ALL)
+                            choice_type = input('\n\t请输入新闻类型编号:')
+                            type_id = type_result[int(choice_type) - 1][0]
+                            # TODO 正文内容
+                            content_id = 100
+                            is_top = input('\n\t请输入置顶级别(0-5):')
+                            is_commit = input('\n\t是否提交(Y/N):')
+                            if is_commit == 'Y' or is_commit == 'y':
+                                __news_service.insert(title, user_id, type_id, content_id, is_top)
+                                print('\n\t保存成功,3秒钟自动返回')
+                                time.sleep(3)
+                            else:
+                                continue
+                        if choice == '2':
+                            pass
+                        elif choice == 'back':
+                            break
+                        elif choice == 'exit':
+                            sys.exit(0)
+
                     elif role == '管理员':
                         print(Fore.LIGHTBLUE_EX, '\n\t1.新闻管理')
                         print(Fore.LIGHTBLUE_EX, '\n\t2.用户管理')
