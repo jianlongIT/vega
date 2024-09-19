@@ -82,7 +82,7 @@ class NewsDao(object):
             cursor = con.cursor()
             sql = 'select ceil(count(*)/10) from t_news'
             cursor.execute(sql)
-            return cursor.fetone()[0]
+            return cursor.fetchone()[0]
         except Exception as e:
             print(e)
         finally:
@@ -94,7 +94,7 @@ class NewsDao(object):
             con = my_pool.get_connection()
             con.start_transaction()
             cursor = con.cursor()
-            delete_sql = 'delete from  t_news where new_id =%s'
+            delete_sql = 'delete from  t_news where id =%s'
             cursor.execute(delete_sql, (new_id,))
             con.commit()
         except Exception as e:
@@ -138,3 +138,37 @@ class NewsDao(object):
         finally:
             if 'con' in dir():
                 con.close()
+
+    def search_by_id(self, id):
+        try:
+            con = my_pool.get_connection()
+            cursor = con.cursor()
+            sql = 'select n.title,tt.type,n.is_top ' \
+                  'from t_news as n left join t_type tt ' \
+                  'on n.type_id = tt.id  where n.id=%s'
+            cursor.execute(sql, (id,))
+            result = cursor.fetchone()
+            return result
+        except Exception as e:
+            print(e)
+        finally:
+            if 'con' in dir():
+                con.close()
+
+    def new_update(self, id, title, type_id, content_id, is_top):
+        try:
+            con = my_pool.get_connection()
+            con.start_transaction()
+            cursor = con.cursor()
+            insert_sql = 'update t_news set title=%s,type_id=%s,content_id=%s,is_top=%s,update_time=now(),state=%s ' \
+                         'where id=%s'
+            cursor.execute(insert_sql, (title, type_id, content_id, is_top, '待审批', id))
+            con.commit()
+        except Exception as e:
+            if 'con' in dir():
+                con.rollback()
+            print(e)
+        finally:
+            if 'con' in dir():
+                con.close()
+            del con

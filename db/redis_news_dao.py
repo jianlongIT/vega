@@ -24,3 +24,12 @@ class RedisNewsDao(object):
         finally:
             if con in dir():
                 del con
+
+    def delete(self, id):
+        con = Redis(connection_pool=redis_pool)
+        try:
+            con.delete(id)
+        except Exception as e:
+            print(e)
+        finally:
+            del con

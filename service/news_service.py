@@ -41,3 +41,13 @@ class NewsService:
 
     def cache_news(self, id, title, username, type, content, is_top, create_time):
         self.__redis_news_dao.insert(id, title, username, type, content, is_top, create_time)
+
+    def cache_delete(self, id):
+        self.__redis_news_dao.delete(id)
+
+    def search_by_id(self, id):
+        return self.__news_dao.search_by_id(id)
+
+    def new_update(self, id, title, type_id, content_id, is_top):
+        self.__news_dao.new_update(id, title, type_id, content_id, is_top)
+        self.__redis_news_dao.delete(id)

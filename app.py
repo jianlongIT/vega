@@ -60,7 +60,56 @@ if __name__ == '__main__':
                             else:
                                 continue
                         if choice == '2':
-                            pass
+                            current_page = 1
+                            while True:
+                                os.system('clear')
+                                count_page = __news_service.search_count_page()
+                                result = __news_service.search_list(current_page)
+                                break_flag = False
+                                for index, value in enumerate(result):
+                                    print(Fore.LIGHTBLUE_EX,
+                                          '\n\t%d\t%s\t%s\t%s' % (index + 1, value[1], value[2], value[3]))
+                                print(Fore.LIGHTBLUE_EX, '\n\t========================================')
+                                print(Fore.LIGHTBLUE_EX, '\n\t当前在第%d页 共%d页' % (current_page, count_page))
+                                print(Fore.LIGHTBLUE_EX, '\n\t========================================')
+                                print(Fore.LIGHTRED_EX, '\n\tback.返回上一层')
+                                print(Fore.LIGHTRED_EX, '\n\tprev.上一页')
+                                print(Fore.LIGHTRED_EX, '\n\tnext.下一页')
+                                print(Style.RESET_ALL)
+                                opt = input('\n\t输入操作编号:')
+                                if opt == 'back':
+                                    break_flag = True
+                                if opt == 'next' and current_page < count_page:
+                                    current_page += 1
+                                if opt == 'prev' and current_page > 1:
+                                    current_page -= 1
+                                if break_flag:
+                                    break
+                                if 1 <= int(opt) <= 10:
+                                    news_id = result[int(opt) - 1][0]
+                                    search_result = __news_service.search_by_id(news_id)
+                                    print('\n\t原有标题:%s' % search_result[0])
+                                    new_title = input('\n\t请输入新的新闻标题:')
+
+                                    print('\n\t原有类型:%s' % search_result[1])
+                                    type_result = __type_service.search_list()
+                                    for index, value in enumerate(type_result):
+                                        print(Fore.LIGHTBLUE_EX,
+                                              '\n\t%d\t%s' % (index + 1, value[1]))
+                                    print(Style.RESET_ALL)
+                                    choice_type = input('\n\t请输入新闻类型编号:')
+                                    type_id = type_result[int(choice_type) - 1][0]
+                                    new_content_id = 100
+
+                                    print('\n\t原有置顶级别:%s' % search_result[2])
+                                    is_top = input('\n\t请输入新的置顶级别(0-5):')
+                                    is_commit = input('\n\t是否提交(Y/N):')
+                                    if is_commit == 'Y':
+                                        __news_service.new_update(news_id, new_title, type_id, new_content_id, is_top)
+                                        time.sleep(3)
+                                        is_commit = print('\n\t修改成功3秒后自动返回')
+                                    else:
+                                        continue
                         elif choice == 'back':
                             break
                         elif choice == 'exit':
@@ -149,6 +198,7 @@ if __name__ == '__main__':
                                         if 1 <= int(opt) <= 10:
                                             delete_id = result[int(opt) - 1][0]
                                             __news_service.delete_new_by_id(delete_id)
+                                            __news_service.cache_delete(delete_id)
                                 elif opt == 'back':
                                     break
                         elif choice == '2':
